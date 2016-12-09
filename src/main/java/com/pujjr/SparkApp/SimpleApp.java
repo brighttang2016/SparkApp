@@ -59,9 +59,9 @@ public class SimpleApp {
 	    System.out.println("求平方后2："+StringUtils.join(integerRsRDD.collect(), ","));
 	    
 	    System.out.println("*********单词分割开始***********");
-	    JavaRDD<String> wordRDD = sc.parallelize(Arrays.asList("hello world","hi"));
-	    System.out.println("wordRDD.collect():"+wordRDD.collect());
-	    JavaRDD<String> wordsRDD = wordRDD.flatMap(new FlatMapFunction<String, String>() {
+	    JavaRDD<String> lines = sc.parallelize(Arrays.asList("hello world","hi"));
+	    System.out.println("lines.collect():"+lines.collect());
+	    JavaRDD<String> wordsRDD = lines.flatMap(new FlatMapFunction<String, String>() {
 
 			@Override
 			public Iterator<String> call(String t) throws Exception {
