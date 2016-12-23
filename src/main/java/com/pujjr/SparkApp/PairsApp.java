@@ -12,6 +12,7 @@ import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
+import org.apache.spark.deploy.SparkSubmit;
 
 import scala.Tuple2;
 
@@ -84,9 +85,18 @@ public class PairsApp implements Serializable{
 		// TODO Auto-generated method stub
 		PairsApp pa = new PairsApp();
 		String logFile = "/usr/local/spark-2.0.0-bin-hadoop2.7/README.md"; // Should be some file on your system
-	    SparkConf conf = new SparkConf().setAppName("Simple Application");
+//	    SparkConf conf = new SparkConf().setAppName("PairsApp测试").setMaster("local");
+		SparkConf conf = new SparkConf();
+		conf.setAppName("PairsApp测试2222");
+		conf.setMaster("spark://192.168.137.16:7077");
+//		conf.setMaster("local");
+//		conf.set("spark.master", "local[4]");
+//		conf.set("spark.executor.memory", "450M");
+		conf.set("spark.executor.memory", "512M");
+//		conf.set("spark.deploy.mode","cluster");
+//		conf.set(key, value)
 	    JavaSparkContext sc = new JavaSparkContext(conf);
-	   
+//	    sc.addJar("runlib/SparkApp.jar");
 		pa.pairsStart(sc);
 		pa.wordCount(sc);
 	}	

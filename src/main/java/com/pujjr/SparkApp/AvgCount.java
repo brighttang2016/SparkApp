@@ -35,8 +35,15 @@ public class AvgCount implements Serializable{
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
+		Map envMap = System.getenv();
+//		System.out.println("envMap:"+envMap);
+//		System.out.println(envMap.get("HADOOP_HOME"));
+//		System.setProperty("hadoop.home.dir", envMap.get("HADOOP_HOME")+"");
 		AvgCount avgCount = new AvgCount(0, 0);
-		SparkConf conf = new SparkConf().setAppName("Simple Application");
+//		SparkConf conf = new SparkConf().setAppName("AvgCount测试").setMaster("local");
+		SparkConf conf = new SparkConf().setAppName("AvgCount测试").setMaster("spark://192.168.137.16:7077");
+		conf.set("spark.executor.memory", "512M");
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		JavaRDD<Integer> nums = sc.parallelize(Arrays.asList(1,2,3,4,5,1,2,3));
 		PairFunction<Integer, String, Integer> pairFunction = new PairFunction<Integer, String, Integer>() {
