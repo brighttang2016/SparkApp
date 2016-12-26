@@ -44,6 +44,7 @@
   </dependencies>
   
   <build>
+  	<finalName>SparkApp</finalName>
     <plugins>
     	<plugin>  
 		    <artifactId>maven-compiler-plugin</artifactId>  
