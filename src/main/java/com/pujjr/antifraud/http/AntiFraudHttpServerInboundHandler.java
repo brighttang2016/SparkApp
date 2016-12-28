@@ -35,6 +35,7 @@ public class AntiFraudHttpServerInboundHandler extends ChannelInboundHandlerAdap
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		System.out.println("msg:"+msg);
 		if (msg instanceof HttpRequest) {
 			request = (HttpRequest) msg;
 			String uri = request.getUri();
