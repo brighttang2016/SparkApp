@@ -25,7 +25,6 @@ public class AntiFraudHttpServer {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .childHandler(new AntiFraudHttpServerInitializer());
-
             Channel ch = b.bind(port).sync().channel();
             System.out.println("服务启动成功，端口：" + port);
             ch.closeFuture().sync();

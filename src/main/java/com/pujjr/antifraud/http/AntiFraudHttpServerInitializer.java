@@ -1,5 +1,6 @@
 package com.pujjr.antifraud.http;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -18,5 +19,7 @@ public class AntiFraudHttpServerInitializer extends ChannelInitializer<SocketCha
         // server端接收到的是httpRequest，所以要使用HttpRequestDecoder进行解码
         ch.pipeline().addLast(new HttpRequestDecoder());
         ch.pipeline().addLast(new AntiFraudHttpServerInboundHandler());
+        ch.pipeline().addLast(new AntiFraudHttpServerInboundHandler());
+//        ch.pipeline().addLast("test", (ChannelHandler) new HttpRequestHandler());
     }
 }
