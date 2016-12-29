@@ -1,5 +1,7 @@
 package com.pujjr.SparkApp;
 
+import org.apache.log4j.PropertyConfigurator;
+
 /**
  * @author tom
  *
@@ -34,6 +36,8 @@ public class TestMain {
 		System.out.println("11111");
 		new MyThread(testMain,"thread2").start();
 		System.out.println("2222");
+		
+		PropertyConfigurator.configure(ClassLoader.getSystemResource("log4j.properties"));
 //		new MyThread(testMain,"thread3").start();
 //		System.out.println("333");
 	}

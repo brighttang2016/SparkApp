@@ -10,6 +10,14 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pujjr.antifraud.service.IReceiverService;
@@ -20,6 +28,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.http.CookieDecoder;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpContent;
@@ -28,50 +37,49 @@ import io.netty.handler.codec.http.HttpHeaders.Values;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.http.cookie.ClientCookieDecoder;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.cookie.CookieEncoder;
+import io.netty.handler.codec.http.cookie.DefaultCookie;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
+import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import io.netty.util.CharsetUtil;
 
 public class AntiFraudHttpServerInboundHandler extends ChannelInboundHandlerAdapter {
+	private Logger logger = Logger.getLogger(AntiFraudHttpServerInboundHandler.class);
 	private HttpRequest request;
-
+//	private FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, OK);
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		System.out.println("msg:"+msg);
+//		System.out.println("msg:"+msg);
+//		FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, OK);
 		if (msg instanceof HttpRequest) {
 			request = (HttpRequest) msg;
 			String uri = request.getUri();
-			System.out.println("uri:" + uri);
-			if(uri.equals("/antifraud")){
-				System.out.println(uri);
-			}else{
-				FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, OK);
+			logger.debug("uri:" + uri);
+			FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, OK);
+			if(!uri.equals("/antifraud")){
 				response.setStatus(HttpResponseStatus.NOT_FOUND);
 				ctx.writeAndFlush(response);
-				System.out.println("返回异常信息");
+				logger.debug("返回异常信息");
 			}
+			/*String cookieStr = request.headers().get("Cookie");
+			System.out.println("cookieStr:"+cookieStr);*/
+//			HttpSession session = new HttpSession();
+			/*ServerCookieDecoder decoder = ServerCookieDecoder.LAX;
+			Set<Cookie> cookieSet = decoder.decode(cookieStr);
+			for (Cookie cookie : cookieSet) {
+				System.out.println("cookieb遍历:"+cookie.name()+"|"+cookie.value());
+			}*/
 		}
 		if (msg instanceof HttpContent) {
 			HttpContent content = (HttpContent) msg;
 			ByteBuf buf = content.content();
-			
+//			FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, OK);
 			//接收
 			IReceiverService receiver = new ReceiverServiceImpl();
 			receiver.doReceive(buf.toString(CharsetUtil.UTF_8),ctx,request);
-//			System.out.println("buf:" + buf.toString(CharsetUtil.UTF_8));
-			//发送
 			buf.release();
-			
-			/*PersonBean person = new PersonBean();
-			person.setName("唐亮");
-			person.setSex("男");
-			String res = JSONObject.toJSONString(person);
-			FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK,Unpooled.wrappedBuffer(res.getBytes("UTF-8")));
-			response.headers().set(CONTENT_TYPE, "application/json;charset=UTF-8");
-			response.headers().set(CONTENT_LENGTH, response.content().readableBytes());
-			if (HttpHeaders.isKeepAlive(request)) {
-				response.headers().set(CONNECTION, Values.KEEP_ALIVE);
-			}
-			ctx.write(response);
-			ctx.flush();*/
 		}
 	}
 

@@ -1,5 +1,12 @@
 package com.pujjr.antifraud.com;
 
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.DataFrameReader;
+import org.apache.spark.sql.SQLContext;
+
+import com.pujjr.antifraud.util.TransactionMapData;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -57,6 +64,20 @@ public class NettyServer extends Thread{
 		} else {
 			port = 5000;
 		}
+		
+		/*//发布到spark运行
+    	SparkConf conf = new SparkConf();
+		conf.setMaster("local");
+//		conf.setMaster("spark://192.168.137.16:7077");
+		conf.setAppName("SparkSQLJDBC2MySQL");
+		conf.set("spark.sql.warehouse.dir", "/path/to/my/");
+        JavaSparkContext sc = new JavaSparkContext(conf);
+        SQLContext sqlContext = new SQLContext(sc);
+        DataFrameReader reader = sqlContext.read().format("jdbc");
+		
+        TransactionMapData tmd = TransactionMapData.getInstance();
+		tmd.put("reader", reader);*/
+		
 		new NettyServer(port).run();
 	}
 }
