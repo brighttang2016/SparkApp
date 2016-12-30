@@ -8,8 +8,8 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public class SendThread implements Runnable{
 	public ChannelHandlerContext ctx;
-	public NettyServerHandler handler;
-	public SendThread(NettyServerHandler handler,ChannelHandlerContext ctx){
+	public SocketServerHandler handler;
+	public SendThread(SocketServerHandler handler,ChannelHandlerContext ctx){
 		System.out.println("SendThread ctx:"+ctx);
 		this.ctx = ctx;
 		this.handler = handler;
@@ -28,6 +28,6 @@ public class SendThread implements Runnable{
 			}
 			i++;
 		}
-		handler.sendToClient(ctx);
+//		handler.sendToClient(ctx);
 	}
 }

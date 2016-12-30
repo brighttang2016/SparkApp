@@ -20,8 +20,8 @@ import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.pujjr.antifraud.service.IReceiverService;
-import com.pujjr.antifraud.service.impl.ReceiverServiceImpl;
+import com.pujjr.antifraud.http.service.IReceiverService;
+import com.pujjr.antifraud.http.service.impl.ReceiverServiceImpl;
 import com.pujjr.antifraud.vo.PersonBean;
 
 import io.netty.buffer.ByteBuf;
@@ -57,12 +57,13 @@ public class AntiFraudHttpServerInboundHandler extends ChannelInboundHandlerAdap
 			request = (HttpRequest) msg;
 			String uri = request.getUri();
 			logger.debug("uri:" + uri);
-			FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, OK);
-			if(!uri.equals("/antifraud")){
+			System.out.println("uri:" + uri);
+//			FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, OK);
+			/*if(!uri.equals("/antifraud")){
 				response.setStatus(HttpResponseStatus.NOT_FOUND);
 				ctx.writeAndFlush(response);
 				logger.debug("返回异常信息");
-			}
+			}*/
 			/*String cookieStr = request.headers().get("Cookie");
 			System.out.println("cookieStr:"+cookieStr);*/
 //			HttpSession session = new HttpSession();
@@ -74,12 +75,14 @@ public class AntiFraudHttpServerInboundHandler extends ChannelInboundHandlerAdap
 		}
 		if (msg instanceof HttpContent) {
 			HttpContent content = (HttpContent) msg;
+			System.out.println("content:"+content);
 			ByteBuf buf = content.content();
 //			FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, OK);
 			//接收
 			IReceiverService receiver = new ReceiverServiceImpl();
 			receiver.doReceive(buf.toString(CharsetUtil.UTF_8),ctx,request);
 			buf.release();
+			System.out.println("22222222222");
 		}
 	}
 
