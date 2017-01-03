@@ -1,7 +1,9 @@
 package com.pujjr.antifraud.com.service.impl;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.pujjr.antifraud.com.service.ISynShortSender;
@@ -22,14 +24,20 @@ public class SynShortSenderImpl implements ISynShortSender {
 		// TODO Auto-generated method stub
 		final ByteBuf time = ctx.alloc().buffer(4); // (2)
 //		String sendStr = System.currentTimeMillis()+"1234567重庆永川区大安";
+		System.out.println(sendStr.length());
         byte[] send = null;
         try {
-			send = sendStr.getBytes("gbk");
-		} catch (UnsupportedEncodingException e) {
+			byte[] sendByte = sendStr.getBytes(Charset.forName("gbk"));
+//			String sendStrFormate = new String(sendByte,"gbk");
+//			logger.info("sendStr.length:"+sendStr.length()+"|"+sendByte.length);
+			sendStr = StringUtils.leftPad(sendByte.length+"", 5, '0') + sendStr;
+			logger.info("send to client:"+sendStr);
+			send = sendStr.getBytes(Charset.forName("gbk"));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
         time.writeBytes(send);
-        while(time.readableBytes() < 100){
+       /* while(time.readableBytes() < 100){
         	try {
     			Thread.currentThread().sleep(1000);
     		} catch (InterruptedException e) {
@@ -37,13 +45,13 @@ public class SynShortSenderImpl implements ISynShortSender {
     		}
         	 logger.info("time.readableBytes():"+time.readableBytes());
         	 time.writeBytes(send);
-        } 
+        } */
         final ChannelFuture f = ctx.writeAndFlush(time); // (3)
         f.addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) {
                 assert f == future;
-                /*ctx.close();
+               /* ctx.close();
                 System.out.println("服务端已主动断开链接");*/
             }
         }); // (4)

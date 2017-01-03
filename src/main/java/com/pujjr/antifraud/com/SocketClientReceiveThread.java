@@ -4,11 +4,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
+import org.apache.log4j.Logger;
+
+import com.pujjr.antifraud.util.Utils;
+
 /**
  * @author tom
  *
  */
 public class SocketClientReceiveThread implements Runnable{
+	//接受缓存空间大小
+	private int bufSize = Integer.parseInt(Utils.getProperty("bufSize")+"");
+	private static final Logger logger = Logger.getLogger(SocketClientReceiveThread.class);
 	private Socket socket;
 	public SocketClientReceiveThread(Socket socket) {
 		this.socket = socket;
@@ -16,31 +23,74 @@ public class SocketClientReceiveThread implements Runnable{
 	
 	@Override
 	public void run() {
-		int i = 0;
-		while(i < 10){
-			i++;
-			System.out.println(i);
-			try {
-				Thread.currentThread().sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			try {
+		try {
+			if(this.socket.isClosed()){
+	//					break;
+			}else{
 				InputStream is = this.socket.getInputStream();
-				byte[] buf = new byte[1024];
-				int readLenth = 0;
+				byte[] buf = new byte[bufSize];
+				
 				StringBuffer sb = new StringBuffer();
-				while((readLenth = is.read(buf)) > 0){
+				//读取报文长度
+				is.read(buf, 0, 5);
+				String rcvLengthStr = new String(buf, "gbk").trim();
+				logger.info("报文接收长度receiveLength："+rcvLengthStr);
+				for (int j = 0; j < rcvLengthStr.length(); j++) {
+					System.out.println(rcvLengthStr.subSequence(0, j+1));
+				}
+				long rcvLength = Integer.parseInt(rcvLengthStr);
+				int readLength = 0;									//单次循环读取字节
+				long sumReadLength = 0;								//总读取字节
+				int remainLength = (int) rcvLength;					//剩余接收字节
+				
+				//读入缓冲区
+				if(remainLength > bufSize){
+					readLength = is.read(buf);
+				}else{
+					readLength = is.read(buf, 0, remainLength);
+				}
+				while(readLength != -1){
+					sumReadLength += readLength;
 					String tempStr = new String(buf,"gbk");
 					sb.append(tempStr);
-					System.out.println("接收tempStr："+tempStr);
+					if(sumReadLength == rcvLength){
+						this.socket.close();
+						is.close();
+						break;
+					}else if(sumReadLength < rcvLength){
+						buf = new byte[bufSize];
+						remainLength = (int) (rcvLength - sumReadLength);
+						if(remainLength > bufSize){
+							readLength = is.read(buf);
+						}else{
+							readLength = is.read(buf, 0, remainLength);
+						}
+					}
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+//				long remainLength = rcvLength;
+				/*while((readLength = is.read(buf)) != -1){
+					sumReadLength += readLength;
+					String tempStr = new String(buf,"gbk");
+					sb.append(tempStr);
+					logger.debug("sumReadLength:"+sumReadLength);
+					logger.info("sb.toString():"+sb.toString());
+					if(sumReadLength == rcvLength){
+						this.socket.close();
+						is.close();
+						break;
+					}else if(sumReadLength > rcvLength){
+//						break;
+					}
+					buf = new byte[bufSize];
+				}*/
+				logger.info("报文接收完成，receive from server:"+sb.toString());
+				if(sumReadLength != rcvLength){
+					logger.error("报文长度不正确，报文长度限制rcvLength："+rcvLength+",实际读取长度sumReadLength："+sumReadLength);
+				}
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		
-		
 	}
 
 }

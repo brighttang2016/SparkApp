@@ -45,7 +45,7 @@ public class SocketClient {
 	 */
 	public static void main(String[] args) {
 		SocketClient client = new SocketClient();
-		int threadNum = 50;
+		int threadNum = 1;//启动50个收发现场组合
 		client.createThread(threadNum);
 	}
 

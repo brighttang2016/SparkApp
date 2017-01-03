@@ -100,11 +100,6 @@ public class SocketServerHandler extends ChannelInboundHandlerAdapter implements
         JavaSparkContext sc = new JavaSparkContext(conf);*/
     	
     	
-    	
-    	
-    	
-    	
-    	
     	/*
     	JavaSparkContext sc = (JavaSparkContext) TransactionMapData.getInstance().get("sc");
         SQLContext sqlContext = new SQLContext(sc);

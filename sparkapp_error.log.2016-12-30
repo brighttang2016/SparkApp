@@ -1,0 +1,53 @@
+[ERROR]2016-12-30 09:31:02  [appclient-registration-retry-thread:org.apache.spark.internal.Logging$class.logError(Logging.scala:70):104328] - [ERROR]  Application has been killed. Reason: All masters are unresponsive! Giving up.
+[ERROR]2016-12-30 09:31:02  [nioEventLoopGroup-3-1:org.apache.spark.internal.Logging$class.logError(Logging.scala:91):104525] - [ERROR]  Error initializing SparkContext.
+java.lang.IllegalStateException: Cannot call methods on a stopped SparkContext.
+This stopped SparkContext was created at:
+
+org.apache.spark.api.java.JavaSparkContext.<init>(JavaSparkContext.scala:58)
+com.pujjr.antifraud.service.impl.RddServiceImpl.selectCurr(RddServiceImpl.java:40)
+com.pujjr.antifraud.service.impl.ReceiverServiceImpl.doReceive(ReceiverServiceImpl.java:32)
+com.pujjr.antifraud.http.AntiFraudHttpServerInboundHandler.channelRead(AntiFraudHttpServerInboundHandler.java:81)
+io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:308)
+io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:294)
+io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:244)
+io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:308)
+io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:294)
+io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:846)
+io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:131)
+io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:511)
+io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:468)
+io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:382)
+io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:354)
+io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:111)
+io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:137)
+java.lang.Thread.run(Thread.java:745)
+
+The currently active SparkContext was created at:
+
+(No active SparkContext.)
+         
+	at org.apache.spark.SparkContext.assertNotStopped(SparkContext.scala:104)
+	at org.apache.spark.SparkContext.getSchedulingMode(SparkContext.scala:1637)
+	at org.apache.spark.SparkContext.postEnvironmentUpdate(SparkContext.scala:2160)
+	at org.apache.spark.SparkContext.<init>(SparkContext.scala:545)
+	at org.apache.spark.api.java.JavaSparkContext.<init>(JavaSparkContext.scala:58)
+	at com.pujjr.antifraud.service.impl.RddServiceImpl.selectCurr(RddServiceImpl.java:40)
+	at com.pujjr.antifraud.service.impl.ReceiverServiceImpl.doReceive(ReceiverServiceImpl.java:32)
+	at com.pujjr.antifraud.http.AntiFraudHttpServerInboundHandler.channelRead(AntiFraudHttpServerInboundHandler.java:81)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:308)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:294)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:244)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:308)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:294)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:846)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:131)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:511)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:468)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:382)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:354)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:111)
+	at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:137)
+	at java.lang.Thread.run(Thread.java:745)
+[ERROR]2016-12-30 16:47:58  [nioEventLoopGroup-3-6:io.netty.util.internal.logging.Slf4JLogger.error(Slf4JLogger.java:176):422598] - [ERROR]  LEAK: ByteBuf.release() was not called before it's garbage-collected. Enable advanced leak reporting to find out where the leak occurred. To enable advanced leak reporting, specify the JVM option '-Dio.netty.leakDetectionLevel=advanced' or call ResourceLeakDetector.setLevel() See http://netty.io/wiki/reference-counted-objects.html for more information.
+[ERROR]2016-12-30 17:18:39  [nioEventLoopGroup-3-7:io.netty.util.internal.logging.Slf4JLogger.error(Slf4JLogger.java:176):84476] - [ERROR]  LEAK: ByteBuf.release() was not called before it's garbage-collected. Enable advanced leak reporting to find out where the leak occurred. To enable advanced leak reporting, specify the JVM option '-Dio.netty.leakDetectionLevel=advanced' or call ResourceLeakDetector.setLevel() See http://netty.io/wiki/reference-counted-objects.html for more information.
+[ERROR]2016-12-30 17:26:27  [nioEventLoopGroup-3-5:io.netty.util.internal.logging.Slf4JLogger.error(Slf4JLogger.java:176):351556] - [ERROR]  LEAK: ByteBuf.release() was not called before it's garbage-collected. Enable advanced leak reporting to find out where the leak occurred. To enable advanced leak reporting, specify the JVM option '-Dio.netty.leakDetectionLevel=advanced' or call ResourceLeakDetector.setLevel() See http://netty.io/wiki/reference-counted-objects.html for more information.

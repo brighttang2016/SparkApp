@@ -1,5 +1,9 @@
 package com.pujjr.antifraud.com.service.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
@@ -43,7 +47,15 @@ public class SynShortReceiverImpl implements ISynShortReceiver{
 		person.setName("唐亮");
 		person.setSex("男");
 		sendStr = "["+recJson.getString("appId")+"]"+"|"+JSONObject.toJSONString(person);
-		logger.info("send do client:"+sendStr);
+//		sendStr = "[模拟客户端0]|{\"name\":\"唐亮\",\"sex\":\"男\"}";
+//		sendStr = "abc唐";
+		/*try {
+			sendStr = new String(sendStr.getBytes("UTF-8"), "gbk");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
 		ISynShortSender sender = new SynShortSenderImpl();
 		sender.doSend(sendStr, ctx);
 	}

@@ -23,7 +23,7 @@ public class SocketClientSendThread implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		while(true){
+//		while(true){
 			try {
 				Thread.currentThread().sleep(1000);
 			} catch (InterruptedException e) {
@@ -56,6 +56,6 @@ public class SocketClientSendThread implements Runnable{
 			}
 			
 		}
-	}
+//	}
 
 }

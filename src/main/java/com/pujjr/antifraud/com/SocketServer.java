@@ -1,5 +1,6 @@
 package com.pujjr.antifraud.com;
 
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.DataFrameReader;
@@ -21,6 +22,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
  *
  */
 public class SocketServer extends Thread{
+	private static final Logger logger = Logger.getLogger(SocketServer.class);
 	private int port;
 
 	public SocketServer(int port) {
@@ -42,12 +44,13 @@ public class SocketServer extends Thread{
 					.childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
 			// Bind and start to accept incoming connections.
 			ChannelFuture f = b.bind(port).sync(); // (7)
-
+			logger.info("服务端启动成功，监听端口："+port);
 			// Wait until the server socket is closed.
 			// In this example, this does not happen, but you can do that to
 			// gracefully
 			// shut down your server.
 			f.channel().closeFuture().sync();
+			
 		}catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
